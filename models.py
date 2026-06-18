@@ -20,3 +20,4 @@ class Applications(Base):
     salary = Column(Integer, nullable=True)
     date_applied = Column(Date)
     status = Column(String, nullable=True)
+    notes = Column(String, nullable=True)

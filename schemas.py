@@ -3,7 +3,7 @@ from datetime import date
 
 class ApplicationCreate(BaseModel):
     company: str
-    title: str
+    role: str
     salary: int = None
     date_applied: date
     status: str
