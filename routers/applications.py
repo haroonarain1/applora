@@ -38,3 +38,10 @@ def update_applications(id: int, application: ApplicationCreate, db: Session = D
     db.refresh(put_app)
     return put_app
 
+@router.delete("/applications/{id}", response_model=ApplicationResponse)
+def delete_application(id: int, db: Session = Depends(get_db)):
+    remove_app = db.query(Applications).filter(Applications.id == id).first()
+    db.delete(remove_app)
+
+    db.commit()
+    return remove_app
