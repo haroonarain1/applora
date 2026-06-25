@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
 from models import User
-from schemas import UserCreate, UserResponse
+from schemas import UserCreate, UserResponse, LoginRequest
 from passlib.context import CryptContext
 
 router = APIRouter()
@@ -18,4 +18,11 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
-
+@router.post("/login")
+def login(user: LoginRequest, db: Session = Depends(get_db)):
+    find_email = db.query(User).filter(User.email == user.email).first()
+    if find_email == None:
+        raise HTTPException(status_code=404, detail="Item not found")
+    
+    if pwd_context.verify(user.password, find_email.password) != True:
+        raise HTTPException(status_code=404, detail="Incorrect Password")
