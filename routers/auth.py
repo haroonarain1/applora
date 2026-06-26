@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from database import get_db
 from models import User
 from schemas import UserCreate, UserResponse, LoginRequest
 from passlib.context import CryptContext
 from jose import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import os
 
 router = APIRouter()
@@ -15,8 +16,8 @@ ALGORITHM = "HS256"
 
 def create_token(user_id):
     payload = {
-        "sub": user_id,
-        "exp": datetime.now() + timedelta(hours=1)
+        "sub": str(user_id),
+        "exp": datetime.now(timezone.utc) + timedelta(hours=1)
     }
     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return token
@@ -32,13 +33,13 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     return new_user
 
 @router.post("/login")
-def login(user: LoginRequest, db: Session = Depends(get_db)):
-    find_email = db.query(User).filter(User.email == user.email).first()
-    if find_email == None:
+def login(user: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    find_username = db.query(User).filter(User.username == user.username).first()
+    if find_username == None:
         raise HTTPException(status_code=404, detail="Item not found")
     
-    if pwd_context.verify(user.password, find_email.password) != True:
+    if pwd_context.verify(user.password, find_username.password) != True:
         raise HTTPException(status_code=404, detail="Incorrect Password")
 
-    access_token = create_token(find_email.id)
+    access_token = create_token(find_username.id)
     return {"access_token": access_token, "token_type": "bearer"}
