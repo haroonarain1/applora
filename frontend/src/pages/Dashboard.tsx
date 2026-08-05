@@ -14,6 +14,11 @@ type Application = {
 export default function Dashboard(){
     
     const [application, setApplication]  = useState<Application[]>([])
+    const [showForm, setShowForm] = useState(false)
+    const [company, setCompany] = useState("")
+    const [role, setRole] = useState("")
+    const [status, setStatus] = useState("")
+    const [dateApplied, setDateApplied] = useState("")
     useEffect(() => {
         const token = localStorage.getItem("token")
         
@@ -25,6 +30,29 @@ export default function Dashboard(){
         .then(res => res.json())
         .then(data => setApplication(data))
     }, [])
+
+    async function handleSubmit(){
+        const token = localStorage.getItem("token")
+        const response = await fetch("http://localhost:8000/applications", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                company: company,
+                role: role,
+                status: status,
+                date_applied: dateApplied,
+                salary: 0,
+                notes: ""
+            })
+        })
+        if(response.ok) {
+            setShowForm(false);
+            window.location.reload();
+        }
+    }
     return (
         <div className="bg-gray-900 min-h-screen">
             <div className="w-full h-16 bg-gray-800 flex items-center justify-between px-6">
@@ -44,8 +72,53 @@ export default function Dashboard(){
                     HA
                 </div>
             </div>
+            
+            {showForm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-gray-800 p-6 rounded-lg w-full max-w-md flex flex-col gap-4">
+                        <h2 className="text-white text-xl font-bold">Add Application</h2>
+                        <input 
+                            type="text" 
+                            placeholder="Company" 
+                            value={company} 
+                            onChange={(e) => setCompany(e.target.value)} 
+                            className="bg-gray-700 text-white px-4 py-2 rounded-lg" 
+                        />
+                        <input 
+                            type="text" 
+                            placeholder="Role" 
+                            value={role} 
+                            onChange={(e) => setRole(e.target.value)}
+                            className="bg-gray-700 text-white px-4 py-2 rounded-lg" 
+                        />
+                        <input 
+                            type="text" 
+                            placeholder="Status" 
+                            value={status} 
+                            onChange={(e) => setStatus(e.target.value)}
+                            className="bg-gray-700 text-white px-4 py-2 rounded-lg" 
+                        />
+                        <input 
+                            type="date" 
+                            value={dateApplied} 
+                            onChange={(e) => setDateApplied(e.target.value)}
+                            className="bg-gray-700 text-white px-4 py-2 rounded-lg" 
+                        />
+                        <div className="flex gap-2">
+                            <button onClick={() => setShowForm(false)} className="bg-gray-600 text-white px-4 py-2 rounded-lg w-full">Cancel</button>
+                            <button onClick={handleSubmit} className="bg-blue-600 text-white px-4 py-2 rounded-lg w-full">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="p-6 text-white">
-                Application History
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-white text-x1 font-bold">Application History</h2>
+                    <button onClick={() => setShowForm(true)} className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold">
+                        + Add Job
+                    </button>
+                </div>
                 <div className="flex justify-between text-gray-400 text-sm px-4 py-2 border-b border-gray-700 mb-2">
                     <span className="w-1/4">Company</span>
                     <span className="w-1/4">Role</span>
