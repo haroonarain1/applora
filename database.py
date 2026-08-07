@@ -6,6 +6,7 @@ import os
 load_dotenv(override=False)
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres123@localhost/applora")
+print(f"DATABASE_URL: {DATABASE_URL}")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
