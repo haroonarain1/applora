@@ -12,7 +12,7 @@ export default function Login() {
         formData.append("username", username)
         formData.append("password", password)
 
-        const response = await fetch("http://localhost:8000/login", {
+        const response = await fetch("https://applora-production.up.railway.app", {
             method: "POST",
             body: formData
         })

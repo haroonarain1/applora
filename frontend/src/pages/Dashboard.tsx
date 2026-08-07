@@ -22,7 +22,7 @@ export default function Dashboard(){
     useEffect(() => {
         const token = localStorage.getItem("token")
         
-        fetch("http://localhost:8000/applications", {
+        fetch("https://applora-production.up.railway.app/applications", {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -33,7 +33,7 @@ export default function Dashboard(){
 
     async function handleSubmit(){
         const token = localStorage.getItem("token")
-        const response = await fetch("http://localhost:8000/applications", {
+        const response = await fetch("https://applora-production.up.railway.app/applications", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
