@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 type Application = {
     id: number
@@ -19,6 +20,7 @@ export default function Dashboard(){
     const [role, setRole] = useState("")
     const [status, setStatus] = useState("")
     const [dateApplied, setDateApplied] = useState("")
+    const navigate = useNavigate()
     useEffect(() => {
         const token = localStorage.getItem("token")
         fetch("https://applora-production.up.railway.app/applications", {
@@ -70,6 +72,9 @@ export default function Dashboard(){
                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
                     HA
                 </div>
+                <button onClick={() => { localStorage.clear(); navigate('/login') }} className="text-gray-400 text-sm hover:text-white">
+                    Logout
+                </button>
             </div>
             
             {showForm && (
