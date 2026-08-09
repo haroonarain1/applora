@@ -21,7 +21,6 @@ export default function Dashboard(){
     const [dateApplied, setDateApplied] = useState("")
     useEffect(() => {
         const token = localStorage.getItem("token")
-        console.log("token:", localStorage.getItem("token"))
         fetch("https://applora-production.up.railway.app/applications", {
             headers: {
                 "Authorization": `Bearer ${token}`

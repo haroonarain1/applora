@@ -17,10 +17,8 @@ export default function Login() {
             body: formData
         })
         const data = await response.json()
-        console.log("response data:", data)
         const token = data.access_token
         localStorage.setItem("token", token)
-        console.log("logged in", token)
         navigate('/dashboard')
     }
 
