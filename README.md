@@ -6,6 +6,10 @@ A full stack job application tracker built with FastAPI and React.
 - **Backend:** FastAPI, PostgreSQL, SQLAlchemy, Alembic
 - **Frontend:** React, TypeScript, Tailwind CSS (in progress)
 
+## Live Demo
+- Frontend: https://applora-puce.vercel.app
+- Backend API: https://applora-production.up.railway.app/docs
+
 ## Setup
 
 1. Clone the repo
